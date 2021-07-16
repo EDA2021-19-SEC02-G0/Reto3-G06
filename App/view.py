@@ -26,6 +26,9 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 
+#Desactiva el seguimiento de memoria para mejorar rendimeinto
+controller.mtTrace.trace_memory = False
+
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion

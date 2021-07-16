@@ -23,6 +23,7 @@
 import config as cf
 import model
 import csv
+from mtTrace import mtTrace #Memory and time trace
 
 
 """
