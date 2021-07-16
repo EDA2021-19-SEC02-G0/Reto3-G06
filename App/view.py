@@ -26,7 +26,6 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 
-
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -34,25 +33,115 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+# =============================
+#       Output functions
+# =============================
 def printMenu():
+    """
+    Imprime el menú de opciones del programa
+    """
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("1- Caracterizar reproducciones")     #REQ 1
+    print("2- Encontrar música para festejar")  #REQ 2
+    print("3- Encontrar música para la tusa")   #REQ 3
+    print("4- Estudiar los géneros musicales")  #REQ 4
 
-catalog = None
+# =============================
+#       Option functions
+# =============================
+def playsByCharacteristics(catalog):
+    """
+    REQUERIMIENTO 1
+    Pide el input del usuario, procesa e imprime cuantas
+    reproducciones cumplen con dos características en un
+    rango determinado.
+
+    Args:
+        catalog: catálogo
+        TODO mejorar Args
+    """
+    char1 = input("Característica 1 (ej.: valencia, sonoridad): ")
+    char1_inf = input("Valór mínimo para " + char1 + ": ")
+    char1_sup = input("Valor máximo para " + char1 + ": ")
+    char2 = input("Característica 1 (ej.: valencia, sonoridad): ")
+    char2_inf = input("Valór mínimo para " + char2 + ": ")
+    char2_sup = input("Valor máximo para " + char2 + ": ")
+    #TODO proceso y output
+
+
+def celebrationMusic(catalog):
+    """
+    REQUERIMIENTO 2
+    TODO documentation
+    """
+    liveness_inf = input("Valor mínimo para Liveness: ")
+    liveness_sup = input("Valor máximo para Liveness: ")
+    speechness_inf = input("Valor mínimo para Speechness: ")
+    speechness_sup = input("Valor máximo para Speechness: ")
+    #TODO proceso y output
+
+
+def studyMusic(catalog):
+    """
+    REQUERIMIENTO 3
+    TODO documentation
+    """
+    valence_inf = input("Valor mínimo para Valence: ")
+    valence_sup = input("Valor máximo para Valenve: ")
+    tempo_inf = input("Valor mínimo para Tempo: ")
+    tempo_sup = input("Valor máximo para Tempo: ")
+
+# =============================
+#          Main program
+# =============================
+def initProgram():
+    """
+    Inicializa el programa cargando los datos. Posteriormente llama
+    al menú principal
+    """
+    print("Bienvenido")
+    print("A continuación se procederá a cargar la información de los archivos")
+    print("ENTER para continuar o 0 para salir\n> ")
+    print("Cargando...")
+    #TODO Load data
+    #Main manú
+    mainMenu(catalog)
+
+
+def mainMenu(catalog):
+    """
+    Menú principal. Le permite al usuario ejecutar las opción
+    del programa.
+
+    Args:
+        catalog -- catálogo
+        TODO mejorar documentación
+    """
+    while True:
+        print("")
+        printMenu()
+        inputs = input('Seleccione una opción para continuar\n')
+        if int(inputs[0]) == 1:
+            #REQ 1
+            pass
+
+        elif int(inputs[0]) == 2:
+            #REQ 2
+            pass
+        
+        elif int(input[0]) == 3:
+            #REQ 3
+            pass
+
+        elif int(inputs[0]) == 4:
+            #REQ 4
+            pass
+
+        else:
+            sys.exit(0)
+
 
 """
-Menu principal
+Programa Principal
 """
-while True:
-    printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
-
-    elif int(inputs[0]) == 2:
-        pass
-
-    else:
-        sys.exit(0)
-sys.exit(0)
+initProgram()
