@@ -1,4 +1,3 @@
-from _typeshed import Self
 from time import process_time
 import tracemalloc
 

@@ -48,6 +48,7 @@ def printMenu():
     print("2- Encontrar música para festejar")  #REQ 2
     print("3- Encontrar música para la tusa")   #REQ 3
     print("4- Estudiar los géneros musicales")  #REQ 4
+    print("0- Salir")
 
 # =============================
 #       Option functions
@@ -104,11 +105,18 @@ def initProgram():
     """
     print("Bienvenido")
     print("A continuación se procederá a cargar la información de los archivos")
-    print("ENTER para continuar o 0 para salir\n> ")
+    init = input("ENTER para continuar o 0 para salir\n> ")
+    if init == "0":
+        sys.exit(0)
     print("Cargando...")
-    #TODO Load data
+    #Inicializa el analizador
+    analyzer = controller.initAnalyzer()
+    #Carga la información
+    controller.loadData(analyzer)
+    #Output de datos cargados
+    
     #Main manú
-    mainMenu(catalog)
+    mainMenu(analyzer)
 
 
 def mainMenu(catalog):
@@ -132,7 +140,7 @@ def mainMenu(catalog):
             #REQ 2
             pass
         
-        elif int(input[0]) == 3:
+        elif int(inputs[0]) == 3:
             #REQ 3
             pass
 

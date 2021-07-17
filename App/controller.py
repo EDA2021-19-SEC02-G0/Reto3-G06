@@ -30,7 +30,39 @@ from mtTrace import mtTrace #Memory and time trace
 El controlador se encarga de mediar entre la vista y el modelo.
 """
 
-# Inicialización del Catálogo de libros
+# Inicialización del Catálogo de reproducciones
+def initAnalyzer():
+    """
+    Inicializa el analizador
+
+    Crea una lista vacia para guardar todas las reproducciones
+    Se crean indices (Maps ordenado) por todas las características
+    de contenido
+
+    Retorna el analizador inicializado.
+    """
+    analyzer = model.newAnalizer()
+
+    return analyzer
+
+
+def loadData(analyzer) -> None:
+    """
+    Carga la información de los archivos al analizador.
+
+    Args
+    ----
+        analyzer: Analizador inicializado
+    """
+    loadListenEvents(analyzer)
+    #TODO load other files
+
+def loadListenEvents(analyzer):
+    reprosFile = cf.data_dir + "context_content_features-small.csv" #TODO remove '-small' for production
+    listen_input_file = csv.DictReader(open(reprosFile, encoding="utf-8"),
+                                delimiter=",")
+    for listenEvent in listen_input_file:
+        model.addEvent(analyzer, listenEvent)
 
 # Funciones para la carga de datos
 
