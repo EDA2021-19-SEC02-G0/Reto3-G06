@@ -51,16 +51,22 @@ def newAnalizer():
     """
     #TODO determinar el tipo de mapa ordenado y asignar funciones de comparación
     analyzer = {
-        "repros":                   lt.newList("ARRAY_LIST"),
-        "InstrumentalnessIn":       om.newMap(),
-        "Acousticnessin":           om.newMap(),
-        "LivenessIn":               om.newMap(),
-        "SpeechinessIn":            om.newMap(),
-        "EnergyIn":                 om.newMap(),
-        "DanceabilityIn":           om.newMap(),
-        "ValenceIn":                om.newMap(),
-        "LoudnessIn":               om.newMap(),
-        "TempoIn":                  om.newMap()
+        "tracks": {
+            "tracksMaps": {
+                "InstrumentalnessIn":       om.newMap(),
+                "Acousticnessin":           om.newMap(),
+                "LivenessIn":               om.newMap(),
+                "SpeechinessIn":            om.newMap(),
+                "EnergyIn":                 om.newMap(),
+                "DanceabilityIn":           om.newMap(),
+                "ValenceIn":                om.newMap(),
+                "LoudnessIn":               om.newMap(),
+                "TempoIn":                  om.newMap()
+            },
+            "tracksLst":                    mp.newMap(100000, loadfactor=2)
+        },
+        "events":                           lt.newList("ARRAY_LIST"),
+        "tracks":                           mp.newMap(100000, loadfactor=2)
     }
 
     return analyzer
