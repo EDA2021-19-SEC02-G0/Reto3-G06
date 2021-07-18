@@ -60,7 +60,9 @@ def newAnalizer():
         "DanceabilityIn":           om.newMap(),
         "ValenceIn":                om.newMap(),
         "LoudnessIn":               om.newMap(),
-        "TempoIn":                  om.newMap()
+        "TempoIn":                  om.newMap(),
+        "tracks":                   mp.newMap(),
+        "artists":                  mp.newMap()
     }
 
     return analyzer
@@ -79,6 +81,10 @@ def addEvent(analyzer, listenEvent):
     lt.addLast(analyzer["repros"], listenEvent)
     # Añade evento a los mapas ordenados de características
     addToCharMaps(analyzer, listenEvent)
+    # Añade la pista al mapa de pistas
+    addEventsTrack(analyzer, listenEvent)
+    # Añade el artista al mapa de artistas
+    addEventsArtist(analyzer, listenEvent)
 
 
 def addToCharMaps(analyzer, listenEvent):
@@ -110,6 +116,29 @@ def addToCharMaps(analyzer, listenEvent):
         else:
             #Añade el evento a la lista de eventos
             lt.addLast(charList, listenEvent)
+
+
+def addEventsTrack(analyzer, listenEvent):
+    """
+    Añade la pista presente en un evento de escucha al mapa de pistas
+    si no se ha añadido antes.
+
+    Args
+    ----
+    analyzer -- analizador de eventos
+    listenEvent -- evento de escucha
+    """
+    tracksMap = analyzer["tracks"]
+    trackEvent = getMapValue(tracksMap, listenEvent["track_id"], "MP")
+    if trackEvent is None:
+        mp.put(tracksMap, listenEvent["tracks_id"], listenEvent)
+
+
+def addEventsArtist(analyzer, listenEvent):
+    artistsMap = analyzer["artists"]
+    artistEvent = getMapValue(artistsMap, listenEvent["artist_id"], "MP")
+    if artistEvent is None:
+        mp.put(artistsMap, listenEvent["artist_id"], listenEvent)
 
 
 # Funciones para agregar informacion al catalogo
