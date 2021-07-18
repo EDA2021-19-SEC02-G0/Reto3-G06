@@ -50,20 +50,43 @@ def newAnalizer():
     Retorna el analizador inicializado.
     """
     #TODO determinar el tipo de mapa ordenado y asignar funciones de comparación
-    analyzer = {
-        "repros":                   lt.newList("ARRAY_LIST"),
-        "InstrumentalnessIn":       om.newMap(),
-        "Acousticnessin":           om.newMap(),
-        "LivenessIn":               om.newMap(),
-        "SpeechinessIn":            om.newMap(),
-        "EnergyIn":                 om.newMap(),
-        "DanceabilityIn":           om.newMap(),
-        "ValenceIn":                om.newMap(),
-        "LoudnessIn":               om.newMap(),
-        "TempoIn":                  om.newMap(),
-        "tracks":                   mp.newMap(),
-        "artists":                  mp.newMap()
-    }
+    analyzer = {"repros":               None,
+        "InstrumentalnessIn":           None,
+        "Acousticnessin":               None,
+        "LivenessIn":                   None,
+        "SpeechinessIn":                None,       
+        "EnergyIn":                     None,
+        "DanceabilityIn":               None,
+        "ValenceIn":                    None,
+        "LoudnessIn":                   None,
+        "TempoIn":                      None,
+        "tracks":                       None,
+        "artists":                      None
+                }
+    analyzer["repros"]=lt.newList('ARRAY_LIST',compareRepros)
+
+    analyzer['InstrumentalnessIn']=om.newMap(omaptype='RBT',comparefunction=compareInstrumental)
+
+    analyzer['Acousticnessin']=om.newMap(omaptype='RBT',comparefunction=compareAcoustic)
+
+    analyzer['LivenessIn']=om.newMap(omaptype='RBT',comparefunction=compareLiveness)
+
+    analyzer['SpeechinessIn']=om.newMap(omaptype='RBT',comparefunction=compareSpeech)
+
+    analyzer['EnergyIn']=om.newMap(omaptype='RBT',comparefunction=compareEnergy)
+
+    analyzer['DanceabilityIn']=om.newMap(omaptype='RBT',comparefunction=compareDance)
+
+    analyzer['ValenceIn']=om.newMap(omaptype='RBT',comparefunction=compareValance)
+
+    analyzer['LoudnessIn']=om.newMap(omaptype='RBT',comparefunction=compareLoud)
+
+    analyzer['TempoIn']=om.newMap(omaptype='RBT',comparefunction=compareTempo)
+
+    analyzer['tracks']=mp.newMap()
+
+    analyzer['artists']=mp.newMap()
+    
 
     return analyzer
 
@@ -212,3 +235,76 @@ class reprosHandler:
         "loudness" :            "LoudnessIn",
         "tempo" :               "TempoIn"
     }
+
+def compareRepros(repro1,repro2):
+    if (repro1 == repro2):
+        return 0
+    elif repro1 > repro2:
+        return 1
+    else:
+        return -1
+
+def compareInstrumental(instrumental1,instrumental2):
+    if (instrumental1 == instrumental2):
+        return 0
+    elif instrumental1 > instrumental2:
+        return 1
+    else:
+        return -1
+def compareAcoustic(acoustic1,acoustic2):
+    if (acoustic1 == acoustic2):
+        return 0
+    elif acoustic1 > acoustic2:
+        return 1
+    else:
+        return -1
+def compareLiveness(liveness1,liveness2):
+    if ( liveness1 == liveness2) :
+        return 0
+    elif liveness1 > liveness2 :
+        return 1
+    else:
+        return -1
+def compareSpeech(speech1,speech2):
+    if ( speech1 == speech2) :
+        return 0
+    elif speech1 > speech2 :
+        return 1
+    else:
+        return -1
+def compareEnergy(energy1,energy2):
+    if ( energy1 == energy2) :
+        return 0
+    elif energy1 > energy2:
+        return 1
+    else:
+        return -1
+def compareDance(dance1,dance2):
+    if ( dance1 == dance2) :
+        return 0
+    elif dance1 > dance2 :
+        return 1
+    else:
+        return -1
+def compareValance(valance1,valance2):
+    if ( valance1 == valance2) :
+        return 0
+    elif valance1 > valance2 :
+        return 1
+    else:
+        return -1
+def compareLoud(loud1,loud2):
+    if ( loud1 == loud2) :
+        return 0
+    elif loud1 > loud2 :
+        return 1
+    else:
+        return -1
+
+def compareTempo(tempo1,tempo2):
+    if ( tempo1 == tempo2) :
+        return 0
+    elif tempo1 > tempo2 :
+        return 1
+    else:
+        return -1
