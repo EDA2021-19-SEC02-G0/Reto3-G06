@@ -51,16 +51,21 @@ def newAnalizer():
     """
     #TODO determinar el tipo de mapa ordenado y asignar funciones de comparación
     analyzer = {
-        "repros":                   lt.newList("ARRAY_LIST"),
-        "InstrumentalnessIn":       om.newMap(),
-        "Acousticnessin":           om.newMap(),
-        "LivenessIn":               om.newMap(),
-        "SpeechinessIn":            om.newMap(),
-        "EnergyIn":                 om.newMap(),
-        "DanceabilityIn":           om.newMap(),
-        "ValenceIn":                om.newMap(),
-        "LoudnessIn":               om.newMap(),
-        "TempoIn":                  om.newMap()
+        "tracks": {
+            "tracksLst" :                   mp.newMap(100000, loadfactor=2), #TODO determinar número de elementos
+            "trackOMaps": {
+                "InstrumentalnessIn":       om.newMap(),
+                "Acousticnessin":           om.newMap(),
+                "LivenessIn":               om.newMap(),
+                "SpeechinessIn":            om.newMap(),
+                "EnergyIn":                 om.newMap(),
+                "DanceabilityIn":           om.newMap(),
+                "ValenceIn":                om.newMap(),
+                "LoudnessIn":               om.newMap(),
+                "TempoIn":                  om.newMap()
+            }
+        },                          
+        "artists":                          mp.newMap(100000, loadfactor=2) #TODO determinar número de elemntos
     }
 
     return analyzer
@@ -75,10 +80,9 @@ def addEvent(analyzer, listenEvent):
         listenEvent: dict -- Evento de escucha obtenido del archivo 
         context_content_features-small.csv
     """
-    # Añade evento a la lista de reproducciones
-    lt.addLast(analyzer["repros"], listenEvent)
-    # Añade evento a los mapas ordenados de características
-    addToCharMaps(analyzer, listenEvent)
+    addEventTrack(analyzer, listenEvent)
+    # Añade al mapa de artistar
+    addEventArtist(analyzer, listenEvent)
 
 
 def addToCharMaps(analyzer, listenEvent):
@@ -94,7 +98,8 @@ def addToCharMaps(analyzer, listenEvent):
     #Ciclo por todas las características de un evento de escucha
     for charName in reprosHandler.charsToMap:
         #Obtener el mapa correspondiente a la característica
-        charMap = analyzer[reprosHandler.charsToMap[charName]]
+        mapKey = reprosHandler.charsToMap[charName]
+        charMap = analyzer["listenEvents"]["eventsMaps"][mapKey]
         #Obtiene el valor correspondiente a la catacterística
         charVal = float(listenEvent[charName])
         #Obtiene la lista con eventos que tienen ese valor en esa característica
@@ -112,6 +117,20 @@ def addToCharMaps(analyzer, listenEvent):
             lt.addLast(charList, listenEvent)
 
 
+def addEventTrack(analyzer, listenEvent):
+    """
+    Revisa si un track ya se añadió al mapa de tracks
+    Si no se ha añadido, lo añade
+
+    Args
+    ----
+        analyzer -- analizador de reproducciones
+        listenEvent -- 
+    """
+
+
+def addEventArtist(analyzer, listenEvent):
+    pass
 # Funciones para agregar informacion al catalogo
 # Funciones para creacion de datos
 
