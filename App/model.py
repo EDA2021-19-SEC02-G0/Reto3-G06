@@ -131,7 +131,7 @@ def addEventsTrack(analyzer, listenEvent):
     tracksMap = analyzer["tracks"]
     trackEvent = getMapValue(tracksMap, listenEvent["track_id"], "MP")
     if trackEvent is None:
-        mp.put(tracksMap, listenEvent["tracks_id"], listenEvent)
+        mp.put(tracksMap, listenEvent["track_id"], listenEvent)
 
 
 def addEventsArtist(analyzer, listenEvent):

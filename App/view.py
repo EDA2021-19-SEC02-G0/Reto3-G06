@@ -25,6 +25,9 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
+from DISClib.ADT import orderedmap as om
 
 #Desactiva el seguimiento de memoria para mejorar rendimeinto
 controller.mtTrace.trace_memory = False
@@ -114,8 +117,28 @@ def initProgram():
     #Carga la información
     controller.loadData(analyzer)
     #Output de datos cargados
-    
-    #Main manú
+    print("Total de registros cargados:", lt.size(analyzer["repros"]))
+    print("Total de artistas diferentes cargados:", mp.size(analyzer["artists"]))
+    print("Total de pistas diferentes cargadas:", mp.size(analyzer["tracks"]))
+    input("ENTER para continuar")
+    print("** PRIMEROS 5 REGISTROS ***")
+    first5Events = lt.subList(analyzer["repros"], 1, 5)
+    i = 1
+    for event in lt.iterator(first5Events):
+        print("Event", i, "\n")
+        for key in event:
+            print(key, ":", event[key])
+    input("ENTER para continuar")
+    print("\n*** ÚLTIMOS 5 REGISTROS ***")
+    last5Events = lt.subList(analyzer["repros"], lt.size(analyzer["repros"]) - 5, 5)
+    i = 1
+    for event in lt.iterator(last5Events):
+        print("\nEvent", i, "\n")
+        i += 1
+        for key in event:
+            print(key, ":", event[key])
+    input("ENTER para continuar")
+    #Main menu
     mainMenu(analyzer)
 
 
