@@ -422,7 +422,7 @@ def keys(rbt, keylo, keyhi):
         Exception
     """
     try:
-        lstkeys = lt.newList('SINGLELINKED', rbt['cmpfunction'])
+        lstkeys = lt.newList('ARRAY_LIST', rbt['cmpfunction'])
         lstkeys = keysRange(rbt['root'], keylo, keyhi, lstkeys,
                             rbt['cmpfunction'])
         return lstkeys

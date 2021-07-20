@@ -25,6 +25,7 @@
  """
 
 
+from os import replace
 from DISClib.DataStructures.arraylist import addLast, isPresent
 import config as cf
 from DISClib.ADT import list as lt
@@ -32,6 +33,7 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.ADT import orderedmap as om
+import sys
 assert cf
 
 """
@@ -63,7 +65,7 @@ def newAnalizer():
         "TempoIn":                      None,
         "tracks":                       None,
         "artists":                      None
-                }
+    }
     analyzer["repros"]=lt.newList('ARRAY_LIST')
 
     analyzer['InstrumentalnessIn']=om.newMap(omaptype='RBT')
@@ -167,28 +169,77 @@ def addEventsArtist(analyzer, listenEvent):
 # Funciones para creacion de datos
 
 # Funciones de consulta
-def playsByCharacteristics(analyzer,char1,char1_inf,char1_sup,char2,char2_inf,char2_sup):
-    lst1=om.keys(analyzer[char1],char1_inf,char1_sup)
-    lst2=om.keys(analyzer[char2],char2_inf,char2_sup)
-    totalart=0
-    totalrepro=0
-    anslst=lt.newList()
-    anslst2=lt.newList()
+def playsByCharacteristics(analyzer: dict, char1: str, char1_inf: float,
+char1_sup: float, char2: str, char2_inf: float, char2_sup: float) -> dict:
+    """
+    Cuántas reproducciones (eventos de escucha) se tienen en el sistema de
+    recomendación basado en la intersección de dos características de 
+    contenido que se encuentran en un rango determinado
 
-    for lstplays in lt.iterator(lst1):
-        if lt.isPresent(lst2,lstplays):
-            totalrepro+=1
-            lt.addLast(anslst2,lstplays)
-        
+    Args
+    ----
 
-    for lstartist in lt.iterator(anslst2):
-        ans=om.valueSet(lst2['artist_id'])
-        if ans not in anslst:
-            anslst=lt.addLast(ans)
-            totalart+=1
-    return (totalart,totalrepro)
-        
-          
+    Analyzer            -- analizador de reproducciones
+    char1 : str         -- nombre de la característica 1
+    char1_inf : float   -- valor mínimo de la característica 1
+    char1_sup : float   -- valor máximo de la característica 1
+    char2 : str         -- nombre de la característica 2
+    char2_inf : float   -- valor mínimo de la característica 2
+    chat2_sup : float   -- valor máximo de la característica 2
+
+    Returns : dict[str, int] | Bool
+    ------
+    Diccionario ["repros": <cantidad de reproducciones>, "artists": 
+    <número de artistas>] o Falso si ningún evento cumple con los
+    filtros
+    """
+    #Obtiene el mapa de características de char1 y char2
+    char1Map = analyzer.get(reprosHandler.getCharsToMapKey(char1.strip().lower()))
+    char2Map = analyzer.get(reprosHandler.getCharsToMapKey(char2.strip().lower()))
+
+    #Check if there are maps that match the char Name
+    if char1Map is None or char2Map is None:
+        #Return no events that match the filters
+        #return False
+        pass
+
+    #Obtiene las llaves que cumplen con el filtro de char1
+    char1EventsKeys = om.keys(char1Map, char1_inf, char1_sup)
+    #Mapa de los eventos que cumplen con char1
+    c1EventsMap = mp.newMap(100000, loadfactor=2) #TODO determinar tamaño
+    #Ciclo por las llaves
+    for char1EventsKey in lt.iterator(char1EventsKeys):
+        char1EventsLst = getMapValue(char1Map, char1EventsKey)
+        #Iterar por los eventos de cada nodo del mapa de características
+        for event in lt.iterator(char1EventsLst):
+            mp.put(c1EventsMap, event["id"], event)
+
+    #Llaves que cumplen con el filtro char1 y char2
+    c2EventsKeys = om.keys(char2Map, char2_inf, char2_sup)
+    matchEventsCnt = 0
+    #Mapa con artistas
+    artistsMap = mp.newMap(100000, loadfactor=2) #TODO determinar tamaño
+    #Ciclo por las llaves
+    for c2EventsKey in lt.iterator(c2EventsKeys):
+        c2EvetnsLst = getMapValue(char2Map, c2EventsKey)
+        #Iterar por los eventos de cada nodo del mapa de caracterísricas
+        for event in lt.iterator(c2EvetnsLst):
+            if mp.contains(c1EventsMap, event["id"]):
+                artist = getMapValue(artistsMap, event["artist_id"], "MP")
+                #Revisa si ya se añadió ese artista
+                if artist is None:
+                    #Añade el artista
+                    mp.put(artistsMap, event["artist_id"], None)
+                #Añade 1 a la cuenta de eventos que cumplen con los filtros
+                matchEventsCnt += 1
+
+    returnDict = {
+        "repros" :      matchEventsCnt,
+        "artists":      mp.size(artistsMap)
+    }
+
+    return returnDict
+
       
         
 
@@ -244,7 +295,7 @@ class reprosHandler:
 
     Atributes
     ---------
-        keysToMap: dict[str, str] -- diccionario en el que las llaves son
+        __charsToMap: dict[str, str], private -- diccionario en el que las llaves son
         las llaves en un diccionario de evento de escucha, correspondientes
         a las características . Los valores son las llaves del diccionario analyzer,
         que corresponden a los mapas ordenados de cada característica de un evento
@@ -261,6 +312,24 @@ class reprosHandler:
         "loudness" :            "LoudnessIn",
         "tempo" :               "TempoIn"
     }
+
+
+    def getCharsToMapKey(charName: str) -> str:
+        """
+        Retorna la llave del diccionario analyzer correspondientes
+        a la característica indicada por parámetro.
+
+        Args
+        ----
+        charName : str      -- Nombre de la característica
+
+        Returns : str       -- Key del dict analyzer corrrespondiente
+        al mapa de la característica
+        """
+        mapKey = reprosHandler.charsToMap.get(charName)
+
+        return mapKey
+
 
 def compareRepros(repro1,repro2):
 

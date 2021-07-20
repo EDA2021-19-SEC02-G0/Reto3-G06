@@ -164,15 +164,9 @@ def mainMenu(analyzer):
             char2_inf = float(input("Valór mínimo para " + char2 + ": "))
             char2_sup = float(input("Valor máximo para " + char2 + ": "))
             ans=controller.playsByCharacteristics(analyzer,char1,char1_inf,char1_sup,char2,char2_inf,char2_sup)
-            print(ans)
-            print(str(char1) + " esta entre " + str(char1_inf) + " y " + str(char1_sup) + " y  \n " 
-                    + str(char2) + " esta entre " + str(char2_inf) + " y " + str(char2_sup) + ".\n"
-                    "total de reproducciones: " + str(ans(1)) + "total de artistas unicos: " + str(ans(0)))
-            
-            
-                                                 
-            #REQ 1
-            pass
+            print("\nTotal de eventos de reproducción:", ans["repros"])
+            print("Total de artistas:", ans["artists"])
+            input("\nENTER para continuar")
 
         elif int(inputs[0]) == 2:
             #REQ 2

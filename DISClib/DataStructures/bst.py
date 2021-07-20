@@ -392,7 +392,7 @@ def keys(bst, keylo, keyhi):
         Exception
     """
     try:
-        lstkeys = lt.newList('SINGLE_LINKED', bst['cmpfunction'])
+        lstkeys = lt.newList('ARRAY_LIST', bst['cmpfunction'])
         lstkeys = keysRange(bst['root'], keylo, keyhi, lstkeys,
                             bst['cmpfunction'])
         return lstkeys
