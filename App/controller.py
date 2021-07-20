@@ -69,3 +69,5 @@ def loadListenEvents(analyzer):
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+def  playsByCharacteristics(analyzer,char1,char1_inf,char1_sup,char2,char2_inf,char2_sup):
+    return model.playsByCharacteristics(analyzer,char1,char1_inf,char1_sup,char2,char2_inf,char2_sup)

@@ -99,7 +99,7 @@ class mtTrace:
         return delta_memory
     
 
-    def printTrace(self, processDesc: str = "Proceso en", trace: dict[str, float] = None) -> None:
+    def printTrace(self, processDesc: str = "Proceso en", trace = None) -> None:
         """
         Imprime el tiempo y la memoria que toma un proceso. Si trace no se especifica
         por parámetro, imprime la información almacenada en self.last_trace 

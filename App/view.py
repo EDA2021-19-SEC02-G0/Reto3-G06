@@ -73,6 +73,7 @@ def playsByCharacteristics(catalog):
     char2 = input("Característica 1 (ej.: valencia, sonoridad): ")
     char2_inf = input("Valór mínimo para " + char2 + ": ")
     char2_sup = input("Valor máximo para " + char2 + ": ")
+    
     #TODO proceso y output
 
 
@@ -142,7 +143,7 @@ def initProgram():
     mainMenu(analyzer)
 
 
-def mainMenu(catalog):
+def mainMenu(analyzer):
     """
     Menú principal. Le permite al usuario ejecutar las opción
     del programa.
@@ -156,6 +157,20 @@ def mainMenu(catalog):
         printMenu()
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs[0]) == 1:
+            char1 = input("Característica 1 (ej.: valencia, sonoridad): ")
+            char1_inf = float(input("Valór mínimo para " + char1 + ": "))
+            char1_sup = float(input("Valor máximo para " + char1 + ": "))
+            char2 = input("Característica 1 (ej.: valencia, sonoridad): ")
+            char2_inf = float(input("Valór mínimo para " + char2 + ": "))
+            char2_sup = float(input("Valor máximo para " + char2 + ": "))
+            ans=controller.playsByCharacteristics(analyzer,char1,char1_inf,char1_sup,char2,char2_inf,char2_sup)
+            print(ans)
+            print(str(char1) + " esta entre " + str(char1_inf) + " y " + str(char1_sup) + " y  \n " 
+                    + str(char2) + " esta entre " + str(char2_inf) + " y " + str(char2_sup) + ".\n"
+                    "total de reproducciones: " + str(ans(1)) + "total de artistas unicos: " + str(ans(0)))
+            
+            
+                                                 
             #REQ 1
             pass
 

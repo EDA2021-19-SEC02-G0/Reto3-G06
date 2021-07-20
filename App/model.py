@@ -25,6 +25,7 @@
  """
 
 
+from DISClib.DataStructures.arraylist import addLast, isPresent
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -63,29 +64,27 @@ def newAnalizer():
         "tracks":                       None,
         "artists":                      None
                 }
-    analyzer["repros"]=lt.newList('ARRAY_LIST',compareRepros)
+    analyzer["repros"]=lt.newList('ARRAY_LIST')
 
-    analyzer['InstrumentalnessIn']=om.newMap(omaptype='RBT',comparefunction=compareInstrumental)
+    analyzer['InstrumentalnessIn']=om.newMap(omaptype='RBT')
 
-    analyzer['Acousticnessin']=om.newMap(omaptype='RBT',comparefunction=compareAcoustic)
+    analyzer['Acousticnessin']=om.newMap(omaptype='RBT')
+    analyzer['LivenessIn']=om.newMap(omaptype='RBT')
 
-    analyzer['LivenessIn']=om.newMap(omaptype='RBT',comparefunction=compareLiveness)
+    analyzer['SpeechinessIn']=om.newMap(omaptype='RBT')
 
-    analyzer['SpeechinessIn']=om.newMap(omaptype='RBT',comparefunction=compareSpeech)
+    analyzer['EnergyIn']=om.newMap(omaptype='RBT')
 
-    analyzer['EnergyIn']=om.newMap(omaptype='RBT',comparefunction=compareEnergy)
+    analyzer['DanceabilityIn']=om.newMap(omaptype='RBT')
 
-    analyzer['DanceabilityIn']=om.newMap(omaptype='RBT',comparefunction=compareDance)
+    analyzer['ValenceIn']=om.newMap(omaptype='RBT')
 
-    analyzer['ValenceIn']=om.newMap(omaptype='RBT',comparefunction=compareValance)
+    analyzer['LoudnessIn']=om.newMap(omaptype='RBT')
 
-    analyzer['LoudnessIn']=om.newMap(omaptype='RBT',comparefunction=compareLoud)
+    analyzer['TempoIn']=om.newMap(omaptype='RBT')
 
-    analyzer['TempoIn']=om.newMap(omaptype='RBT',comparefunction=compareTempo)
-
-    analyzer['tracks']=mp.newMap()
-
-    analyzer['artists']=mp.newMap()
+    analyzer['tracks']=mp.newMap(numelements=88000,maptype='CHAINING',loadfactor=0.5)
+    analyzer['artists']=mp.newMap(numelements=88000,maptype='CHAINING',loadfactor=0.5)
     
 
     return analyzer
@@ -168,6 +167,33 @@ def addEventsArtist(analyzer, listenEvent):
 # Funciones para creacion de datos
 
 # Funciones de consulta
+def playsByCharacteristics(analyzer,char1,char1_inf,char1_sup,char2,char2_inf,char2_sup):
+    lst1=om.keys(analyzer[char1],char1_inf,char1_sup)
+    lst2=om.keys(analyzer[char2],char2_inf,char2_sup)
+    totalart=0
+    totalrepro=0
+    anslst=lt.newList()
+    anslst2=lt.newList()
+
+    for lstplays in lt.iterator(lst1):
+        if lt.isPresent(lst2,lstplays):
+            totalrepro+=1
+            lt.addLast(anslst2,lstplays)
+        
+
+    for lstartist in lt.iterator(anslst2):
+        ans=om.valueSet(lst2['artist_id'])
+        if ans not in anslst:
+            anslst=lt.addLast(ans)
+            totalart+=1
+    return (totalart,totalrepro)
+        
+          
+      
+        
+
+
+
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
@@ -237,13 +263,14 @@ class reprosHandler:
     }
 
 def compareRepros(repro1,repro2):
+
     if (repro1 == repro2):
         return 0
     elif repro1 > repro2:
         return 1
     else:
         return -1
-
+"""
 def compareInstrumental(instrumental1,instrumental2):
     if (instrumental1 == instrumental2):
         return 0
@@ -308,3 +335,20 @@ def compareTempo(tempo1,tempo2):
         return 1
     else:
         return -1
+def compareArtist(artist1,artist2):
+    if ( artist1 == artist2['artist_id']) :
+        return 0
+    elif artist1 > artist2['artist_id'] :
+        return 1
+    else:
+        return -1
+
+def compareTracks(tracks1,tracks2):
+    if ( tracks1 == tracks2) :
+        return 0
+    elif tracks1 > tracks2 :
+        return 1
+    else:
+        return -1
+
+"""
