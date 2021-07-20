@@ -2,7 +2,8 @@
 
 # Integrantes #
  * Jose Vicente Rincón Celis        - 202013321 - j.rinconc@uniandes.edu.co
- * Juan Esteban Arboleda Restrepo   - 201921578 - j.arboleda@uniandes.edu.co 
+ * Juan Esteban Arboleda Restrepo   - 201921578 - j.arboleda@uniandes.edu.co
+ 
 
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
 
