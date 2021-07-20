@@ -219,23 +219,36 @@ char1_sup: float, char2: str, char2_inf: float, char2_sup: float) -> dict:
     matchEventsCnt = 0
     #Mapa con artistas
     artistsMap = mp.newMap(100000, loadfactor=2) #TODO determinar tamaño
+    #Mapa con pistas
+    trackMap = mp.newMap(100000, loadfactor=2)
+    #Lista de eventos que cumplen las condiciones
+    eventsLst = lt.newList("ARRAY_LIST")
     #Ciclo por las llaves
     for c2EventsKey in lt.iterator(c2EventsKeys):
         c2EvetnsLst = getMapValue(char2Map, c2EventsKey)
         #Iterar por los eventos de cada nodo del mapa de caracterísricas
         for event in lt.iterator(c2EvetnsLst):
+            #Si está en el mapa de eventos que cumplen char1
             if mp.contains(c1EventsMap, event["id"]):
+                #Añade a la lista de eventos
+                lt.addLast(eventsLst, event)
                 artist = getMapValue(artistsMap, event["artist_id"], "MP")
+                track = getMapValue(trackMap, event["track_id"], "MP")
                 #Revisa si ya se añadió ese artista
                 if artist is None:
                     #Añade el artista
-                    mp.put(artistsMap, event["artist_id"], None)
+                    mp.put(artistsMap, event["artist_id"], event)
                 #Añade 1 a la cuenta de eventos que cumplen con los filtros
                 matchEventsCnt += 1
+                #Revisa si ya se añadió la pista
+                if track is None:
+                    mp.put(trackMap, event["track_id"], event)
+            
 
     returnDict = {
-        "repros" :      matchEventsCnt,
-        "artists":      mp.size(artistsMap)
+        "repros" :      eventsLst,
+        "artists":      artistsMap,
+        "tracks":       trackMap
     }
 
     return returnDict

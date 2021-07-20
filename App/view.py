@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from random import randint
 import config as cf
 import sys
 import controller
@@ -56,7 +57,7 @@ def printMenu():
 # =============================
 #       Option functions
 # =============================
-def playsByCharacteristics(catalog):
+def playsByCharacteristics(analyzer):
     """
     REQUERIMIENTO 1
     Pide el input del usuario, procesa e imprime cuantas
@@ -68,36 +69,75 @@ def playsByCharacteristics(catalog):
         TODO mejorar Args
     """
     char1 = input("Característica 1 (ej.: valencia, sonoridad): ")
-    char1_inf = input("Valór mínimo para " + char1 + ": ")
-    char1_sup = input("Valor máximo para " + char1 + ": ")
+    char1_inf = float(input("Valór mínimo para " + char1 + ": "))
+    char1_sup = float(input("Valor máximo para " + char1 + ": "))
     char2 = input("Característica 1 (ej.: valencia, sonoridad): ")
-    char2_inf = input("Valór mínimo para " + char2 + ": ")
-    char2_sup = input("Valor máximo para " + char2 + ": ")
-    
-    #TODO proceso y output
+    char2_inf = float(input("Valór mínimo para " + char2 + ": "))
+    char2_sup = float(input("Valor máximo para " + char2 + ": "))
+    ans = controller.playsByCharacteristics(analyzer, char1, char1_inf, 
+    char1_sup, char2, char2_inf, char2_sup)
+    print("\nTotal de eventos de reproducción:", lt.size(ans["repros"]))
+    print("Total de artistas:", mp.size(ans["artists"]))
+    input("\nENTER para continuar")
 
 
-def celebrationMusic(catalog):
+def celebrationMusic(analyzer):
     """
     REQUERIMIENTO 2
     TODO documentation
     """
-    liveness_inf = input("Valor mínimo para Liveness: ")
-    liveness_sup = input("Valor máximo para Liveness: ")
-    speechness_inf = input("Valor mínimo para Speechness: ")
-    speechness_sup = input("Valor máximo para Speechness: ")
-    #TODO proceso y output
+    #Input
+    liveness_inf = float(input("Valor mínimo para Liveness: "))
+    liveness_sup = float(input("Valor máximo para Liveness: "))
+    speechness_inf = float(input("Valor mínimo para Speechness: "))
+    speechness_sup = float(input("Valor máximo para Speechness: "))
+    #Process
+    ans = controller.playsByCharacteristics(analyzer, "liveness", liveness_inf, 
+    liveness_sup, "speechiness", speechness_inf, speechness_sup)
+    trackCount = mp.size(ans["tracks"])
+    tracksLst = mp.valueSet(ans["tracks"])
+    #Output
+    print("\nTotal de pistas:", trackCount)
+    for i in range(1, 9):
+        trackIndex = randint(1, trackCount)   
+        track = lt.getElement(tracksLst, trackIndex)
+        print("Track", i, ":", track["track_id"], "with liveness", track["liveness"],
+        "and speechness", track["speechiness"])
+
+    input("\nENTER para continuar")
 
 
-def studyMusic(catalog):
+def breackupMusic(analyzer):
     """
     REQUERIMIENTO 3
     TODO documentation
     """
-    valence_inf = input("Valor mínimo para Valence: ")
-    valence_sup = input("Valor máximo para Valenve: ")
-    tempo_inf = input("Valor mínimo para Tempo: ")
-    tempo_sup = input("Valor máximo para Tempo: ")
+    #INPUT
+    valence_inf = float(input("Valor mínimo para Valence: "))
+    valence_sup = float(input("Valor máximo para Valenve: "))
+    tempo_inf = float(input("Valor mínimo para Tempo: "))
+    tempo_sup = float(input("Valor máximo para Tempo: "))
+    #PROCESS
+    ans = controller.playsByCharacteristics(
+        analyzer,
+        "valence",
+        valence_inf,
+        valence_sup,
+        "tempo",
+        tempo_inf,
+        tempo_sup
+    )
+    trackCount = mp.size(ans["tracks"])
+    tracksLst = mp.valueSet(ans["tracks"])
+    #Output
+    print("\nTotal de pistas:", trackCount)
+    for i in range(1, 9):
+        trackIndex = randint(1, trackCount)   
+        track = lt.getElement(tracksLst, trackIndex)
+        print("Track", i, ":", track["track_id"], "with valence", track["valence"],
+        "and tempo", track["tempo"])
+
+    input("\nENTER para continuar")
 
 # =============================
 #          Main program
@@ -157,24 +197,15 @@ def mainMenu(analyzer):
         printMenu()
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs[0]) == 1:
-            char1 = input("Característica 1 (ej.: valencia, sonoridad): ")
-            char1_inf = float(input("Valór mínimo para " + char1 + ": "))
-            char1_sup = float(input("Valor máximo para " + char1 + ": "))
-            char2 = input("Característica 1 (ej.: valencia, sonoridad): ")
-            char2_inf = float(input("Valór mínimo para " + char2 + ": "))
-            char2_sup = float(input("Valor máximo para " + char2 + ": "))
-            ans=controller.playsByCharacteristics(analyzer,char1,char1_inf,char1_sup,char2,char2_inf,char2_sup)
-            print("\nTotal de eventos de reproducción:", ans["repros"])
-            print("Total de artistas:", ans["artists"])
-            input("\nENTER para continuar")
+            playsByCharacteristics(analyzer)
 
         elif int(inputs[0]) == 2:
             #REQ 2
-            pass
+            celebrationMusic(analyzer)
         
         elif int(inputs[0]) == 3:
             #REQ 3
-            pass
+            breackupMusic(analyzer)
 
         elif int(inputs[0]) == 4:
             #REQ 4
