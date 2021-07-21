@@ -169,8 +169,7 @@ def addEventsArtist(analyzer, listenEvent):
 # Funciones para creacion de datos
 
 # Funciones de consulta
-def playsByCharacteristics(analyzer: dict, char1: str, char1_inf: float,
-char1_sup: float, char2: str, char2_inf: float, char2_sup: float) -> dict:
+def playsByCharacteristics(analyzer: dict, char1: str, char1_inf: float,char1_sup: float, char2: str, char2_inf: float, char2_sup: float) -> dict:
     """
     Cuántas reproducciones (eventos de escucha) se tienen en el sistema de
     recomendación basado en la intersección de dos características de 
@@ -196,13 +195,13 @@ char1_sup: float, char2: str, char2_inf: float, char2_sup: float) -> dict:
     #Obtiene el mapa de características de char1 y char2
     char1Map = analyzer.get(reprosHandler.getCharsToMapKey(char1.strip().lower()))
     char2Map = analyzer.get(reprosHandler.getCharsToMapKey(char2.strip().lower()))
-
+   
     #Check if there are maps that match the char Name
     if char1Map is None or char2Map is None:
         #Return no events that match the filters
         #return False
         pass
-
+      
     #Obtiene las llaves que cumplen con el filtro de char1
     char1EventsKeys = om.keys(char1Map, char1_inf, char1_sup)
     #Mapa de los eventos que cumplen con char1
@@ -323,7 +322,8 @@ class reprosHandler:
         "danceability" :        "DanceabilityIn",
         "valence" :             "ValenceIn",
         "loudness" :            "LoudnessIn",
-        "tempo" :               "TempoIn"
+        "tempo" :               "TempoIn",
+        "acousticness" :         "Acousticnessin"
     }
 
 
@@ -339,7 +339,7 @@ class reprosHandler:
         Returns : str       -- Key del dict analyzer corrrespondiente
         al mapa de la característica
         """
-        mapKey = reprosHandler.charsToMap.get(charName)
+        mapKey = reprosHandler.charsToMap.get(charName,"")
 
         return mapKey
 
