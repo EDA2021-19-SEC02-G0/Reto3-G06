@@ -55,7 +55,7 @@ def newAnalizer():
     #TODO determinar el tipo de mapa ordenado y asignar funciones de comparación
     analyzer = {"repros":               None,
         "InstrumentalnessIn":           None,
-        "Acousticnessin":               None,
+        "AcousticnessIn":               None,
         "LivenessIn":                   None,
         "SpeechinessIn":                None,       
         "EnergyIn":                     None,
@@ -66,29 +66,22 @@ def newAnalizer():
         "tracks":                       None,
         "artists":                      None
     }
+
     analyzer["repros"]=lt.newList('ARRAY_LIST')
 
     analyzer['InstrumentalnessIn']=om.newMap(omaptype='RBT')
-
-    analyzer['Acousticnessin']=om.newMap(omaptype='RBT')
+    analyzer['AcousticnessIn']=om.newMap(omaptype='RBT')
     analyzer['LivenessIn']=om.newMap(omaptype='RBT')
-
     analyzer['SpeechinessIn']=om.newMap(omaptype='RBT')
-
     analyzer['EnergyIn']=om.newMap(omaptype='RBT')
-
     analyzer['DanceabilityIn']=om.newMap(omaptype='RBT')
-
     analyzer['ValenceIn']=om.newMap(omaptype='RBT')
-
     analyzer['LoudnessIn']=om.newMap(omaptype='RBT')
-
     analyzer['TempoIn']=om.newMap(omaptype='RBT')
 
     analyzer['tracks']=mp.newMap(numelements=88000,maptype='CHAINING',loadfactor=0.5)
     analyzer['artists']=mp.newMap(numelements=88000,maptype='CHAINING',loadfactor=0.5)
     
-
     return analyzer
 
 
@@ -323,7 +316,7 @@ class reprosHandler:
         "valence" :             "ValenceIn",
         "loudness" :            "LoudnessIn",
         "tempo" :               "TempoIn",
-        "acousticness" :         "Acousticnessin"
+        "acousticness" :         "AcousticnessIn"
     }
 
 
@@ -339,98 +332,6 @@ class reprosHandler:
         Returns : str       -- Key del dict analyzer corrrespondiente
         al mapa de la característica
         """
-        mapKey = reprosHandler.charsToMap.get(charName,"")
+        mapKey = reprosHandler.charsToMap.get(charName)
 
         return mapKey
-
-
-def compareRepros(repro1,repro2):
-
-    if (repro1 == repro2):
-        return 0
-    elif repro1 > repro2:
-        return 1
-    else:
-        return -1
-"""
-def compareInstrumental(instrumental1,instrumental2):
-    if (instrumental1 == instrumental2):
-        return 0
-    elif instrumental1 > instrumental2:
-        return 1
-    else:
-        return -1
-def compareAcoustic(acoustic1,acoustic2):
-    if (acoustic1 == acoustic2):
-        return 0
-    elif acoustic1 > acoustic2:
-        return 1
-    else:
-        return -1
-def compareLiveness(liveness1,liveness2):
-    if ( liveness1 == liveness2) :
-        return 0
-    elif liveness1 > liveness2 :
-        return 1
-    else:
-        return -1
-def compareSpeech(speech1,speech2):
-    if ( speech1 == speech2) :
-        return 0
-    elif speech1 > speech2 :
-        return 1
-    else:
-        return -1
-def compareEnergy(energy1,energy2):
-    if ( energy1 == energy2) :
-        return 0
-    elif energy1 > energy2:
-        return 1
-    else:
-        return -1
-def compareDance(dance1,dance2):
-    if ( dance1 == dance2) :
-        return 0
-    elif dance1 > dance2 :
-        return 1
-    else:
-        return -1
-def compareValance(valance1,valance2):
-    if ( valance1 == valance2) :
-        return 0
-    elif valance1 > valance2 :
-        return 1
-    else:
-        return -1
-def compareLoud(loud1,loud2):
-    if ( loud1 == loud2) :
-        return 0
-    elif loud1 > loud2 :
-        return 1
-    else:
-        return -1
-
-def compareTempo(tempo1,tempo2):
-    if ( tempo1 == tempo2) :
-        return 0
-    elif tempo1 > tempo2 :
-        return 1
-    else:
-        return -1
-def compareArtist(artist1,artist2):
-    if ( artist1 == artist2['artist_id']) :
-        return 0
-    elif artist1 > artist2['artist_id'] :
-        return 1
-    else:
-        return -1
-
-def compareTracks(tracks1,tracks2):
-    if ( tracks1 == tracks2) :
-        return 0
-    elif tracks1 > tracks2 :
-        return 1
-    else:
-        return -1
-
-"""
