@@ -402,7 +402,8 @@ class reprosHandler:
         "valence" :             "ValenceIn",
         "loudness" :            "LoudnessIn",
         "tempo" :               "TempoIn",
-        "acousticness" :         "AcousticnessIn"
+        "acousticness" :         "AcousticnessIn",
+        "energy":                  "EnergyIn"
     }
 
 
