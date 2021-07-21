@@ -126,6 +126,7 @@ def celebrationMusic(analyzer):
 
     if ans == False:
         print("Ningún evento cumple los filtros")
+        input("\nENTER para continuar")
         return ...
     
     trackCount = mp.size(ans["tracks"])
@@ -164,6 +165,7 @@ def breackupMusic(analyzer):
 
     if ans == False:
         print("Ningún evento cumple con los filtros")
+        input("\nENTER para continuar")
         return ...
     
     trackCount = mp.size(ans["tracks"])
@@ -214,7 +216,7 @@ def modifyMusicGenders():
 
     controller.modifyGender(genderName, tempo_inf, tempo_sup)
     print("Genero modificado exitosamente")
-    input("ENTER para continuar")
+    input("\nENTER para continuar")
 
 
 def studyMusicGenders(analyzer):
