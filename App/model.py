@@ -35,6 +35,7 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.ADT import orderedmap as om
 import sys
 assert cf
+import json
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -235,7 +236,10 @@ def playsByCharacteristics(analyzer: dict, char1: str, char1_inf: float,char1_su
                 #Revisa si ya se añadió la pista
                 if track is None:
                     mp.put(trackMap, event["track_id"], event)
-            
+
+    #Revisar si hay eventos que cumplen los filtros
+    if lt.isEmpty(eventsLst):
+        return False       
 
     returnDict = {
         "repros" :      eventsLst,
@@ -245,7 +249,89 @@ def playsByCharacteristics(analyzer: dict, char1: str, char1_inf: float,char1_su
 
     return returnDict
 
-      
+
+def songsByGender(analyzer, toStudy: list):
+    """
+    Retorna un diccionario con el tempo, el número de eventos de escucha, el
+    número de artistas y el ID de los 10 primeros artistas 
+    correspondientes a cada genero pasado en la lista de generos toStudy.
+
+    Args
+    ----
+    analyzer -- analizador de eventos
+    toStudy : list[str] -- lista con los nombres de los generos
+
+    Returns : dict[str, Any]
+    -------
+    Diccionario con llaves correspondientes a genderName. Adicionalmente
+    con llave 'total' con totales de los campos a los que aplica
+    """
+    genders = reprosHandler.getGenders()
+    returnDict = mp.newMap(100000, loadfactor=2) #TODO determinar tamaño
+    eventsCount = 0
+    for genderName in toStudy:
+        genderArtistsMap = mp.newMap(10, loadfactor=1) #TODO determinar tamaño
+        genderArtistsLst = lt.newList()
+        genderEventsCnt = 0
+        genderArtistCount = 0
+        genderName: str = genderName.strip().lower()
+        genderTempo = genders.get(genderName)
+        if genderTempo is None:
+            raise Exception("Invalid gender name: " + str(genderName))
+        tempoKeys = om.keys(
+            analyzer[reprosHandler.getCharsToMapKey("tempo")],
+            genderTempo[0],
+            genderTempo[1]
+        )
+        for tempo in lt.iterator(tempoKeys):
+            events = getMapValue(
+                analyzer[reprosHandler.getCharsToMapKey("tempo")],
+                tempo
+            )
+            genderEventsCnt += lt.size(events)
+            for event in lt.iterator(events):
+                if not mp.contains(genderArtistsMap, event["artist_id"]):
+                    mp.put(genderArtistsMap, event["artist_id"], None)
+                    genderArtistCount += 1
+                    if lt.size(genderArtistsLst) < 10:
+                        lt.addLast(genderArtistsLst, event["artist_id"])
+        eventsCount += genderEventsCnt          
+        mp.put(returnDict, genderName, {
+            "tempo":        genderTempo,
+            "repros":       genderEventsCnt,
+            "artists":      genderArtistsLst,
+            "artistCnt":    mp.size(genderArtistsMap)
+        })
+    
+    return returnDict, eventsCount
+                
+
+
+
+
+def genderExists(genderName: str):
+    """
+    Retorna verdadero si el genero existe en el archivo .json
+    de generos o Falso si no existe
+
+    Args
+    ----
+    genderName: str -- nombre del género a buscar
+    """
+    genderName = genderName.strip().lower()
+    genders = reprosHandler.getGenders()
+
+    if genderName in genders:
+        return True
+    return False
+
+
+def modifyGender(genderName, tempo_inf, tempo_sup):
+    """
+    TODO documentación
+    """
+    return reprosHandler.modifyGender(genderName, tempo_inf,
+    tempo_sup)
         
 
 
@@ -335,3 +421,35 @@ class reprosHandler:
         mapKey = reprosHandler.charsToMap.get(charName)
 
         return mapKey
+    
+
+    def getGenders() -> dict:
+        """
+        Retorna un diccionario con los generos y los rangos de tempo
+        de cada genero. Las llaves del diccionario son los nombres
+        de los generos y los valores de este son listas de dos elementos.
+        Los elementos de las listas son de tipo int y corresponden al
+        limite inferior y superior de tempo del genero en ese orden.
+        """
+        with open("Data/music-genders.json", "r", encoding="utf-8") as jsonGen:
+            genders = json.load(jsonGen)
+
+        return genders
+
+
+    def modifyGender(genderName: str, tempo_inf: float, tempo_sup: float):
+        """
+        Modifica o agrega un genero al archivo .json de generos
+
+        Args
+        ----
+        genderName: str -- nombre del genero a modificar o agregar
+        tempo_inf: float -- límite inferior de tempo a agregar
+        tempo_sup: flaot -- límite superior de tempo a agregar
+        """
+        genderName = genderName.strip().lower()
+        genders = reprosHandler.getGenders()
+        genders[genderName] = [tempo_inf, tempo_sup]
+        with open("Data/music-genders.json", "w") as jsonGen:
+            json.dump(genders, jsonGen)
+

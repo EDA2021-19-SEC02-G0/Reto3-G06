@@ -75,3 +75,31 @@ def  playsByCharacteristics(analyzer, char1, char1_inf, char1_sup, char2, char2_
     """
     return model.playsByCharacteristics(analyzer, char1, char1_inf,
     char1_sup, char2, char2_inf, char2_sup)
+
+
+def genderExists(genderName):
+    """
+    TODO documentación
+    """
+    return model.genderExists(genderName)
+
+
+def modifyGender(genderName, tempo_inf, tempo_sup):
+    """
+    TODO documentación
+    """
+    return model.modifyGender(genderName, tempo_inf, tempo_sup)
+
+
+def getGenders():
+    """
+    TODO documentación
+    """
+    return model.reprosHandler.getGenders()
+
+
+def songsByGender(analyzer, toStudy: list):
+    """
+    TODO documentación 
+    """
+    return model.songsByGender(analyzer, toStudy)

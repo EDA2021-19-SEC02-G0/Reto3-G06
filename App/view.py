@@ -48,11 +48,37 @@ def printMenu():
     Imprime el menú de opciones del programa
     """
     print("Bienvenido")
-    print("1- Caracterizar reproducciones")     #REQ 1
-    print("2- Encontrar música para festejar")  #REQ 2
-    print("3- Encontrar música para la tusa")   #REQ 3
-    print("4- Estudiar los géneros musicales")  #REQ 4
+    print("1- Caracterizar reproducciones")             #REQ 1
+    print("2- Encontrar música para festejar")          #REQ 2
+    print("3- Encontrar música para la tusa")           #REQ 3
+    print("4- Estudiar los géneros musicales")          #REQ 4
+    print("5- Consultar / modificar generos musicales") #REQ 4
     print("0- Salir")
+
+
+def printRow(row: list) -> None:
+    """
+    Imprime la fila de una tabla. Si el largo de los datos supera el ancho de la columna,
+    imprime el dato incompleto con ...
+    Args:
+        row: Lista de listas. Row debe ser de la forma [<lens>, <data>]
+            <lens>: (list) Lista con ancho de las columnas
+            <data>: (list) Lista con datos de las columnas
+    TODO Manejo de ancho y caracteres asiaticos
+    """
+    rowFormat = ""
+    for i in range(0, len(row[0])):
+        colWidth = row[0][i]
+        cell = str(row[1][i])
+        #Añade la columna al formato
+        rowFormat += "{:<" + str(colWidth) + "}"
+        #Revisa y corrige si el tamaño de los datos es más grande que la columna
+        if len(cell) > colWidth:
+            row[1][i] = cell[0:colWidth - 3] + "..."
+    
+    #Imrpime la fila
+    print(rowFormat.format(*row[1]))
+
 
 # =============================
 #       Option functions
@@ -76,8 +102,11 @@ def playsByCharacteristics(analyzer):
     char2_sup = float(input("Valor máximo para " + char2 + ": "))
     ans = controller.playsByCharacteristics(analyzer, char1, char1_inf, 
     char1_sup, char2, char2_inf, char2_sup)
-    print("\nTotal de eventos de reproducción:", lt.size(ans["repros"]))
-    print("Total de artistas:", mp.size(ans["artists"]))
+    if ans == False:
+        print("No hay eventos que cumplan con los filtros")
+    else:
+        print("\nTotal de eventos de reproducción:", lt.size(ans["repros"]))
+        print("Total de artistas:", mp.size(ans["artists"]))
     input("\nENTER para continuar")
 
 
@@ -94,6 +123,11 @@ def celebrationMusic(analyzer):
     #Process
     ans = controller.playsByCharacteristics(analyzer, "liveness", liveness_inf, 
     liveness_sup, "speechiness", speechness_inf, speechness_sup)
+
+    if ans == False:
+        print("Ningún evento cumple los filtros")
+        return ...
+    
     trackCount = mp.size(ans["tracks"])
     tracksLst = mp.valueSet(ans["tracks"])
     #Output
@@ -127,6 +161,11 @@ def breackupMusic(analyzer):
         tempo_inf,
         tempo_sup
     )
+
+    if ans == False:
+        print("Ningún evento cumple con los filtros")
+        return ...
+    
     trackCount = mp.size(ans["tracks"])
     tracksLst = mp.valueSet(ans["tracks"])
     #Output
@@ -139,6 +178,68 @@ def breackupMusic(analyzer):
 
     input("\nENTER para continuar")
 
+
+def lstMusicGenders():
+    genders = controller.getGenders()
+    printRow([
+            [20, 10, 10],
+            [
+                "Nombre",
+                "BPM inf",
+                "BPM sup"
+            ]
+    ])
+    for genderName in genders:
+        printRow([
+            [20, 10, 10],
+            [
+                genderName,
+                genders[genderName][0],
+                genders[genderName][1]
+            ]
+        ])
+    input("\nENTER para continuar")
+
+
+def modifyMusicGenders():
+    print("Ingrese el nombre de el genero que desea modificar o agregar")
+    genderName = input("> ")
+    if controller.genderExists(genderName):
+        print("MODIFICANDO genero", genderName)
+    else:
+        print("AGREGANDO genero", genderName)
+    
+    tempo_inf = float(input("Límite inferior de tempo: "))
+    tempo_sup = float(input("Límite superior de tempo: "))
+
+    controller.modifyGender(genderName, tempo_inf, tempo_sup)
+    print("Genero modificado exitosamente")
+    input("ENTER para continuar")
+
+
+def studyMusicGenders(analyzer):
+    """
+    TODO documentación
+    """
+    #INPUT
+    toStudy = input("Ingrese lista de generos a estudiar separada por ',': ").split(",")
+    ans = controller.songsByGender(analyzer, toStudy)
+    genderNames = mp.keySet(ans[0])
+    for genderName in lt.iterator(genderNames):
+        tempo = getMapValue(ans[0], genderName, "MP")["tempo"]
+        genderEventCount = getMapValue(ans[0], genderName, "MP")["repros"]
+        genderArtistCount = getMapValue(ans[0], genderName, "MP")["artistCnt"]
+        genderArtists = getMapValue(ans[0], genderName, "MP")["artists"]
+        print("\n\n====", genderName, "====")
+        print("Para", genderName, "el tempo está entre", tempo[0], "y", tempo[1])
+        print(genderName, "tiene", genderEventCount, "reproducciones y",
+        genderArtistCount, "artistas")
+        i = 1
+        for artist in lt.iterator(genderArtists):
+            print("Artista", i, ":", artist)
+            i += 1
+    print("\nTotal de eventos:", ans[1])
+    input("\nENTER para continuar")
 # =============================
 #          Main program
 # =============================
@@ -197,6 +298,7 @@ def mainMenu(analyzer):
         printMenu()
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs[0]) == 1:
+            #REQ 1
             playsByCharacteristics(analyzer)
 
         elif int(inputs[0]) == 2:
@@ -209,11 +311,52 @@ def mainMenu(analyzer):
 
         elif int(inputs[0]) == 4:
             #REQ 4
-            pass
-
+            studyMusicGenders(analyzer)
+        
+        elif int(inputs[0]) == 5:
+            print("Seleccione una opción")
+            print("1- Consultar generos")
+            print("2- Modificar generos")
+            option = int(input("> ")[0])
+            if option == 1:
+                lstMusicGenders()
+            elif option == 2:
+                modifyMusicGenders()
+            else:
+                print("Opción invalida")
         else:
             sys.exit(0)
 
+
+def getMapValue(map, key, type = "OM"):
+    """
+    Devuelve el valor correspondiente a la llave pasada por
+    parámetro en el mapa pasado por parámetro
+    
+    Args
+    ----
+        map -- Mapa
+        key -- llave
+        type: str -- tipo de mapa. 'OM' para ordered map y 'MP'
+        para mapa normal
+    
+    Returns
+    -------
+    Valor correspondiente a la llave o None si no se encuentra la llave
+    en el mapa
+    """
+    if type == "OM":
+        entry = om.get(map, key)
+    elif type == "MP":
+        entry = mp.get(map, key)
+    else:
+        raise Exception("Invalid map type. Type param must be 'OM' or 'MP'")
+    
+    if entry is None:
+        return None
+
+    val = me.getValue(entry)
+    return val
 
 """
 Programa Principal
