@@ -246,7 +246,7 @@ def playsByCharacteristics(analyzer: dict, char1: str, char1_inf: float,char1_su
         "artists":      artistsMap,
         "tracks":       trackMap
     }
-
+    
     return returnDict
 
 

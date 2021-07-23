@@ -105,8 +105,10 @@ def playsByCharacteristics(analyzer):
     if ans == False:
         print("No hay eventos que cumplan con los filtros")
     else:
-        print("\nTotal de eventos de reproducción:", lt.size(ans["repros"]))
-        print("Total de artistas:", mp.size(ans["artists"]))
+        print("\nTotal de eventos de reproducción:", lt.size(ans[0]["repros"]))
+        print("Total de artistas:", mp.size(ans[0]["artists"]))
+        print("Tiempo [ms]: ", f"{ans[1]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{ans[2]:.3f}")
     input("\nENTER para continuar")
 
 
@@ -124,13 +126,13 @@ def celebrationMusic(analyzer):
     ans = controller.playsByCharacteristics(analyzer, "liveness", liveness_inf, 
     liveness_sup, "speechiness", speechness_inf, speechness_sup)
 
-    if ans == False:
+    if ans[0] == False:
         print("Ningún evento cumple los filtros")
         input("\nENTER para continuar")
         return ...
     
-    trackCount = mp.size(ans["tracks"])
-    tracksLst = mp.valueSet(ans["tracks"])
+    trackCount = mp.size(ans[int(0)]["tracks"])
+    tracksLst = mp.valueSet(ans[0]["tracks"])
     #Output
     print("\nTotal de pistas:", trackCount)
     for i in range(1, 9):
@@ -138,6 +140,8 @@ def celebrationMusic(analyzer):
         track = lt.getElement(tracksLst, trackIndex)
         print("Track", i, ":", track["track_id"], "with liveness", track["liveness"],
         "and speechness", track["speechiness"])
+        print("Tiempo [ms]: ", f"{ans[1]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{ans[2]:.3f}")
 
     input("\nENTER para continuar")
 
@@ -149,7 +153,7 @@ def breackupMusic(analyzer):
     """
     #INPUT
     valence_inf = float(input("Valor mínimo para Valence: "))
-    valence_sup = float(input("Valor máximo para Valenve: "))
+    valence_sup = float(input("Valor máximo para Valence: "))
     tempo_inf = float(input("Valor mínimo para Tempo: "))
     tempo_sup = float(input("Valor máximo para Tempo: "))
     #PROCESS
@@ -163,13 +167,13 @@ def breackupMusic(analyzer):
         tempo_sup
     )
 
-    if ans == False:
+    if ans[0] == False:
         print("Ningún evento cumple con los filtros")
         input("\nENTER para continuar")
         return ...
     
-    trackCount = mp.size(ans["tracks"])
-    tracksLst = mp.valueSet(ans["tracks"])
+    trackCount = mp.size(ans[0]["tracks"])
+    tracksLst = mp.valueSet(ans[0]["tracks"])
     #Output
     print("\nTotal de pistas:", trackCount)
     for i in range(1, 9):
@@ -177,6 +181,8 @@ def breackupMusic(analyzer):
         track = lt.getElement(tracksLst, trackIndex)
         print("Track", i, ":", track["track_id"], "with valence", track["valence"],
         "and tempo", track["tempo"])
+        print("Tiempo [ms]: ", f"{ans[1]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{ans[2]:.3f}")
 
     input("\nENTER para continuar")
 
@@ -226,12 +232,12 @@ def studyMusicGenders(analyzer):
     #INPUT
     toStudy = input("Ingrese lista de generos a estudiar separada por ',': ").split(",")
     ans = controller.songsByGender(analyzer, toStudy)
-    genderNames = mp.keySet(ans[0])
+    genderNames = mp.keySet(ans[0][0])
     for genderName in lt.iterator(genderNames):
-        tempo = getMapValue(ans[0], genderName, "MP")["tempo"]
-        genderEventCount = getMapValue(ans[0], genderName, "MP")["repros"]
-        genderArtistCount = getMapValue(ans[0], genderName, "MP")["artistCnt"]
-        genderArtists = getMapValue(ans[0], genderName, "MP")["artists"]
+        tempo = getMapValue(ans[0][0], genderName, "MP")["tempo"]
+        genderEventCount = getMapValue(ans[0][0], genderName, "MP")["repros"]
+        genderArtistCount = getMapValue(ans[0][0], genderName, "MP")["artistCnt"]
+        genderArtists = getMapValue(ans[0][0], genderName, "MP")["artists"]
         print("\n\n====", genderName, "====")
         print("Para", genderName, "el tempo está entre", tempo[0], "y", tempo[1])
         print(genderName, "tiene", genderEventCount, "reproducciones y",
@@ -240,7 +246,9 @@ def studyMusicGenders(analyzer):
         for artist in lt.iterator(genderArtists):
             print("Artista", i, ":", artist)
             i += 1
-    print("\nTotal de eventos:", ans[1])
+    print("\nTotal de eventos:", ans[0][1])
+    print("Tiempo [ms]: ", f"{ans[1]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{ans[2]:.3f}")
     input("\nENTER para continuar")
 # =============================
 #          Main program
